@@ -1,0 +1,23 @@
+[
+ {
+  "uuid": "1f31a16e-7096-4a98-bf8b-8a298deeb7d3",
+  "ip_address": "0.0.0.0",
+  "port": 8080,
+  "authorised": true,
+  "name": "",
+  "state": "measuring",
+  "summary": null,
+  "MinArea": 6160,
+  "DilationIterations": 10,
+  "ForegroundThresh": 128,
+  "GaussianSmooth": 5,
+  "MogHistoryLength": 500,
+  "MogThreshold": 30,
+  "MogDetectShadows": 0,
+  "SimplifyEpsilon": 5,
+  "MinDuration": 2,
+  "IdleDuration": 1,
+  "ResumeSqDistance": 200,
+  "MaxArea": 115000
+ }
+]
