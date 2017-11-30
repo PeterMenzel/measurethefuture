@@ -7,8 +7,11 @@ import shutil
 
 class DataList:
 
-    def load_data(self, zip_filename):
-        with zipfile.ZipFile(zip_filename, 'r') as data_folder:
+    def __init__(self, zip_filename):
+        self.zip_filename = zip_filename
+
+    def extract_data(self):
+        with zipfile.ZipFile(self.zip_filename, 'r') as data_folder:
             files = data_folder.namelist()
             data_folder.extractall()
         print(files)
@@ -22,7 +25,7 @@ class DataList:
     def get_fixed_filename(self):
         """Return a 'fixed' version of filename."""
         for file in os.listdir('.'):
-            new_name = file.replace(".json", ".csv")
+            new_name = file.replace(".json", ".csv").replace(".jpg", ".gif")
             os.rename(file, new_name)
             print(new_name)
         print(os.listdir('.'))
