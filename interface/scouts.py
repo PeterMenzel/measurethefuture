@@ -1,0 +1,4 @@
+
+
+class Scouts:
+    pass
