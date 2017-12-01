@@ -1,6 +1,9 @@
 
 from tkinter import *
 from tkinter import ttk
+import os
+# from Pillow import ImageTk, Image
+
 YEARS = ["2017", "2018", "2019", "2020"]
 MONTHS = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 DAYS = ["1", "2", "3", "4", "5"]
@@ -13,11 +16,11 @@ class MeasureTheFutureApp:
         master.title('Measure The Future - Townsville CityLibraries')
 
         self.header_frame = ttk.Frame(master)
-        self.header_frame.pack()
+        self.header_frame.pack(side = TOP)
         self.selection_frame = ttk.Frame(master)
-        self.selection_frame.pack()
+        self.selection_frame.pack(side = LEFT)
         self.presentation_frame = ttk.Frame(master)
-        self.presentation_frame.pack()
+        self.presentation_frame.pack(side = RIGHT)
 
         self.year_label = ttk.Label(self.selection_frame, text = "Year:")
         self.year_label.grid(row = 0, column = 0)
@@ -28,7 +31,16 @@ class MeasureTheFutureApp:
         self.hour_label = ttk.Label(self.selection_frame, text = "Hour:")
         self.hour_label.grid(row = 3, column = 0)
 
-        ttk.Label(self.presentation_frame, text = "Visitors: ")
+        # logo = PhotoImage(file = "/Users/localadmin/PycharmProjects/measurethefuture/interface/11_29_0830/scout-1f31a16e-7096-4a98-bf8b-8a298deeb7d3 2")
+        # os.chdir('11_29_0830')
+        # print(os.listdir('.')[0])
+        # logo = PhotoImage(file = "{}/{}".format(os.getcwd(), os.listdir('.')[0]))
+        # self.presentation_frame.config(image = logo)
+        # self.scout_cam_image = self.get_scout_cam_image()
+        # self.presentation_frame.img = self.scout_cam_image
+        # self.presentation_frame.config(image = self.presentation_frame.img)
+        # self.presentation_frame.config(compound = 'top')
+        # ttk.Label(self.presentation_frame, text = "Visitors: ").pack()
 
         year = StringVar()
         self.year_combobox = ttk.Combobox(self.selection_frame, textvariable = year)
@@ -49,6 +61,14 @@ class MeasureTheFutureApp:
         self.hour_combobox = ttk.Combobox(self.selection_frame, textvariable = hour)
         self.hour_combobox.config(values = HOURS)
         self.hour_combobox.grid(row = 3, column = 1)
+
+
+    def get_scout_cam_image(self):
+        os.chdir('11_29_0830')
+        return PhotoImage(file = "{}/{}".format(os.getcwd(), os.listdir('.')[0]))
+        # return PhotoImage(file = "/Users/localadmin/PycharmProjects/measurethefuture/interface/11_29_0830/scout-1f31a16e-7096-4a98-bf8b-8a298deeb7d3.gif")
+        # return PhotoImage(file = "scout-1f31a16e-7096-4a98-bf8b-8a298deeb7d3.gif")
+        # return ImageTk.PhotoImage(Image.open("{}/{}".format(os.getcwd(), os.listdir('.')[0])))
 
 
 def main():

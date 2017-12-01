@@ -25,7 +25,7 @@ class DataList:
     def get_fixed_filename(self):
         """Return a 'fixed' version of filename."""
         for file in os.listdir('.'):
-            new_name = file.replace(".json", ".csv").replace(".jpg", ".gif")
+            new_name = file.replace(".json", ".csv") #.replace(".jpg", ".gif")
             os.rename(file, new_name)
             print(new_name)
         print(os.listdir('.'))
