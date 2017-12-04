@@ -3,6 +3,10 @@ import zipfile
 import json
 import os
 import shutil
+# import Image
+# import Image, ImageTk
+# from Pillow import ImageTk, Image
+# from PIL import ImageTk, Image
 
 
 class DataList:
@@ -24,6 +28,8 @@ class DataList:
 
     def get_fixed_filename(self):
         """Return a 'fixed' version of filename."""
+        # im = Image.open(os.listdir('.')[0])
+        # im.save('scout_image.gif')
         for file in os.listdir('.'):
             new_name = file.replace(".json", ".csv") #.replace(".jpg", ".gif")
             os.rename(file, new_name)

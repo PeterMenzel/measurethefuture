@@ -2,7 +2,12 @@
 from tkinter import *
 from tkinter import ttk
 import os
+# import Image, ImageTk
 # from Pillow import ImageTk, Image
+# import matplotlib
+# matplotlib.use("TkAgg")
+# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+# from matplotlib.figure import Figure
 
 YEARS = ["2017", "2018", "2019", "2020"]
 MONTHS = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -21,6 +26,7 @@ class MeasureTheFutureApp:
         self.selection_frame.pack(side = LEFT)
         self.presentation_frame = ttk.Frame(master)
         self.presentation_frame.pack(side = RIGHT)
+        print(self.presentation_frame.config())
 
         self.year_label = ttk.Label(self.selection_frame, text = "Year:")
         self.year_label.grid(row = 0, column = 0)
@@ -30,17 +36,22 @@ class MeasureTheFutureApp:
         self.day_label.grid(row = 2, column = 0)
         self.hour_label = ttk.Label(self.selection_frame, text = "Hour:")
         self.hour_label.grid(row = 3, column = 0)
+        print(self.year_label.config())
 
         # logo = PhotoImage(file = "/Users/localadmin/PycharmProjects/measurethefuture/interface/11_29_0830/scout-1f31a16e-7096-4a98-bf8b-8a298deeb7d3 2")
         # os.chdir('11_29_0830')
         # print(os.listdir('.')[0])
         # logo = PhotoImage(file = "{}/{}".format(os.getcwd(), os.listdir('.')[0]))
         # self.presentation_frame.config(image = logo)
-        # self.scout_cam_image = self.get_scout_cam_image()
+        self.scout_cam_image = self.get_scout_cam_image().subsample(2, 2)
+        self.scout_cam_label = Label(self.presentation_frame)
+        self.scout_cam_label.pack()
+        self.scout_cam_label.img = self.scout_cam_image
+        self.scout_cam_label.config(image = self.scout_cam_label.img)
         # self.presentation_frame.img = self.scout_cam_image
         # self.presentation_frame.config(image = self.presentation_frame.img)
         # self.presentation_frame.config(compound = 'top')
-        # ttk.Label(self.presentation_frame, text = "Visitors: ").pack()
+        ttk.Label(self.presentation_frame, text = "Visitors: ").pack()
 
         year = StringVar()
         self.year_combobox = ttk.Combobox(self.selection_frame, textvariable = year)
@@ -65,10 +76,14 @@ class MeasureTheFutureApp:
 
     def get_scout_cam_image(self):
         os.chdir('11_29_0830')
+        # print(os.getcwd())
+        print(os.listdir('.'))
         return PhotoImage(file = "{}/{}".format(os.getcwd(), os.listdir('.')[0]))
         # return PhotoImage(file = "/Users/localadmin/PycharmProjects/measurethefuture/interface/11_29_0830/scout-1f31a16e-7096-4a98-bf8b-8a298deeb7d3.gif")
         # return PhotoImage(file = "scout-1f31a16e-7096-4a98-bf8b-8a298deeb7d3.gif")
         # return ImageTk.PhotoImage(Image.open("{}/{}".format(os.getcwd(), os.listdir('.')[0])))
+        # return Image(os.listdir('.')[0], "Scout Cam Image")
+        # return Image.open(os.listdir('.')[0])
 
 
 def main():
