@@ -8,6 +8,9 @@ import os
 # matplotlib.use("TkAgg")
 # from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 # from matplotlib.figure import Figure
+from PIL import ImageTk, Image
+import PIL
+
 
 YEARS = ["2017", "2018", "2019", "2020"]
 MONTHS = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -43,14 +46,22 @@ class MeasureTheFutureApp:
         # print(os.listdir('.')[0])
         # logo = PhotoImage(file = "{}/{}".format(os.getcwd(), os.listdir('.')[0]))
         # self.presentation_frame.config(image = logo)
-        self.scout_cam_image = self.get_scout_cam_image().subsample(2, 2)
-        self.scout_cam_label = Label(self.presentation_frame)
+
+        # self.scout_cam_image = self.get_scout_cam_image().subsample(2, 2)
+        # self.scout_cam_label = Label(self.presentation_frame)
+        # self.scout_cam_label.pack()
+        # self.scout_cam_label.img = self.scout_cam_image
+        # self.scout_cam_label.config(image = self.scout_cam_label.img)
+
+        os.chdir('11_29_0830')
+        # print(os.getcwd())
+        print(os.listdir('.')[2])
+        self.scout_cam_image = Image.open(os.listdir('.')[2])
+        self.scout_cam_label = Canvas(self.presentation_frame)
+        self.scout_cam_label.image = PIL.ImageTk.PhotoImage(self.scout_cam_image)
+        self.scout_cam_label.create_image(0, 0, image=self.scout_cam_label.image, anchor='nw')
         self.scout_cam_label.pack()
-        self.scout_cam_label.img = self.scout_cam_image
-        self.scout_cam_label.config(image = self.scout_cam_label.img)
-        # self.presentation_frame.img = self.scout_cam_image
-        # self.presentation_frame.config(image = self.presentation_frame.img)
-        # self.presentation_frame.config(compound = 'top')
+
         ttk.Label(self.presentation_frame, text = "Visitors: ").pack()
 
         year = StringVar()
