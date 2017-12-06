@@ -29,7 +29,7 @@ class MeasureTheFutureApp:
         self.selection_frame.pack(side = LEFT)
         self.presentation_frame = ttk.Frame(master)
         self.presentation_frame.pack(side = RIGHT)
-        print(self.presentation_frame.config())
+        self.presentation_frame.config(padding = (30, 15))
 
         self.year_label = ttk.Label(self.selection_frame, text = "Year:")
         self.year_label.grid(row = 0, column = 0)
@@ -57,10 +57,15 @@ class MeasureTheFutureApp:
         # print(os.getcwd())
         print(os.listdir('.')[2])
         self.scout_cam_image = Image.open(os.listdir('.')[2])
-        self.scout_cam_label = Canvas(self.presentation_frame)
-        self.scout_cam_label.image = PIL.ImageTk.PhotoImage(self.scout_cam_image)
-        self.scout_cam_label.create_image(0, 0, image=self.scout_cam_label.image, anchor='nw')
-        self.scout_cam_label.pack()
+        # self.scout_cam_image = self.scout_cam_image.resize((800, 250), Image.ANTIALIAS)
+        self.scout_cam_canvas = Canvas(self.presentation_frame)
+        self.scout_cam_canvas.config(width = 680, height = 480)
+        print(self.scout_cam_canvas.config())
+        self.scout_cam_canvas.image = PIL.ImageTk.PhotoImage(self.scout_cam_image)
+        self.scout_cam_canvas.create_image(0, 0, image=self.scout_cam_canvas.image, anchor='nw', tags="IMG")
+        self.scout_cam_canvas.pack()
+        # img = Image.open("flower.png")
+        self.scout_cam_canvas.bind("<Configure>", self.resize)
 
         ttk.Label(self.presentation_frame, text = "Visitors: ").pack()
 
@@ -84,6 +89,9 @@ class MeasureTheFutureApp:
         self.hour_combobox.config(values = HOURS)
         self.hour_combobox.grid(row = 3, column = 1)
 
+        # rescale all the objects tagged with the "all" tag
+        # self.scale("all", 0, 0)
+
 
     def get_scout_cam_image(self):
         os.chdir('11_29_0830')
@@ -95,6 +103,13 @@ class MeasureTheFutureApp:
         # return ImageTk.PhotoImage(Image.open("{}/{}".format(os.getcwd(), os.listdir('.')[0])))
         # return Image(os.listdir('.')[0], "Scout Cam Image")
         # return Image.open(os.listdir('.')[0])
+
+    def resize(self, event):
+        size = (event.width, event.height)
+        resized = self.scout_cam_image.resize(size,Image.ANTIALIAS)
+        self.scout_cam_canvas.image = ImageTk.PhotoImage(resized)
+        self.scout_cam_canvas.delete("IMG")
+        self.scout_cam_canvas.create_image(0, 0, image=self.scout_cam_canvas.image, anchor=NW, tags="IMG")
 
 
 def main():

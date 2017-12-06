@@ -1,4 +1,11 @@
+import os
 
 
 class ScoutHealths:
-    pass
+    def __init__(self):
+        self.scout_id = []
+        self.cpu = []
+        self.memory = []
+        self.total_memory = []
+        self.storage = []
+        self.created_at = []
