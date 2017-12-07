@@ -16,4 +16,5 @@ data2.extract_files("download (3)")
 data2.get_fixed_filename()
 data2.load_scout_healths()
 data2.load_scout_interactions()
+data2.load_scout_summaries()
 
