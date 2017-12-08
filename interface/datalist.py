@@ -102,15 +102,15 @@ class DataList:
         for i in range(len(in_scout_summaries)):
             scout_summaries_component = in_scout_summaries[i].split(",")[0][2:].strip(' ').strip('\n')
             # scout_summaries_component = in_scout_summaries[i].strip(' ').strip('\n')
-            print(scout_summaries_component)
+            # print(scout_summaries_component)
             if scout_summaries_component.startswith("ScoutUUID", 1):
                 scout_summaries_instance.scout_id = scout_summaries_component[scout_summaries_component.find(':') + 3:-1]
                 # scout_healths_instance.scout_id = "test"
-                print(scout_summaries_instance.scout_id)
+                # print(scout_summaries_instance.scout_id)
             elif "VisitorCount" in scout_summaries_component:
                 scout_summaries_instance.visitor_count = scout_summaries_component[scout_summaries_component.find(':') + 2:]
                 # scout_healths_instance.scout_id = "test"
-                print(scout_summaries_instance.visitor_count)
+                # print(scout_summaries_instance.visitor_count)
             elif "VisitTimeBuckets" in scout_summaries_component or "VisitorBuckets" in scout_summaries_component:
                 if scout_summaries_component.startswith("VisitTimeBuckets", 1):
                     table_association = "VisitTimeBuckets"
@@ -171,10 +171,11 @@ class DataList:
         #         scout_summaries_instance.memory.append(scout_summaries_component[scout_summaries_component.find(':') + 2:])
         #         # scout_healths_instance.scout_id = "test"
         #         print(scout_summaries_instance.memory)
-        print(scout_summaries_instance.visit_time_buckets)
-        print(len(scout_summaries_instance.visit_time_buckets))
-        print(len(scout_summaries_instance.visit_time_buckets[18]))
-        print(scout_summaries_instance.visitor_buckets)
-        print(in_scout_summaries)
+
+        # print(scout_summaries_instance.visit_time_buckets)
+        # print(len(scout_summaries_instance.visit_time_buckets))
+        # print(len(scout_summaries_instance.visit_time_buckets[18]))
+        # print(scout_summaries_instance.visitor_buckets)
+        # print(in_scout_summaries)
         # print(in_scout_summaries.split(",")[0][2:])
         in_scout_summaries_file.close()

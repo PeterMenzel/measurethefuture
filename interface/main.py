@@ -10,6 +10,8 @@ import os
 # from matplotlib.figure import Figure
 from PIL import ImageTk, Image
 import PIL
+from datalist import DataList
+from scout_summaries import ScoutSummaries
 
 
 YEARS = ["2017", "2018", "2019", "2020"]
@@ -22,7 +24,7 @@ class MeasureTheFutureApp:
     def __init__(self, master):
 
         master.title('Measure The Future - Townsville CityLibraries')
-
+        print(os.getcwd())
         self.header_frame = ttk.Frame(master)
         self.header_frame.pack(side = TOP)
         self.selection_frame = ttk.Frame(master)
@@ -53,21 +55,82 @@ class MeasureTheFutureApp:
         # self.scout_cam_label.img = self.scout_cam_image
         # self.scout_cam_label.config(image = self.scout_cam_label.img)
 
-        os.chdir('11_29_0830')
+        # os.chdir('..')
+        self.datalist = DataList("download (3)")
+        print(os.getcwd())
+        self.datalist.extract_files("download (3)")
+        self.datalist.get_fixed_filename()
+        self.datalist.load_scout_healths()
+        self.datalist.load_scout_interactions()
+        self.datalist.load_scout_summaries()
+
+        # os.chdir('download (3)')
         # print(os.getcwd())
-        print(os.listdir('.')[2])
-        self.scout_cam_image = Image.open(os.listdir('.')[2])
-        # self.scout_cam_image = self.scout_cam_image.resize((800, 250), Image.ANTIALIAS)
+        print(os.listdir('.')[0])
+        self.scout_cam_image = Image.open(os.listdir('.')[0])
+        self.scout_cam_image.putalpha(128)  # Half alpha; alpha argument must be an int
+        self.scout_cam_image.save("./scout-1f31a16e-7096-4a98-bf8b-8a298deeb7d3.gif", "GIF")
+        # self.scout_cam_image = self.scout_cam_image.convert('RGBA')
+        # image_data = self.scout_cam_image.getdata()
+        # new_image_data = []
+        # new_image_data.append((0, 0, 0, 255))
+        # for item in image_data:
+        #     if item[0] == 255 and item[1] == 255 and item[2] == 255:
+        #         new_image_data.append((255, 255, 255, 100))
+        #     else:
+        #         new_image_data.append(item)
+        # self.scout_cam_image.putdata(new_image_data)
+        # self.scout_cam_image.save("./scout-1f31a16e-7096-4a98-bf8b-8a298deeb7d3.gif", "GIF")
+        #
+        # # self.scout_cam_image = self.scout_cam_image.resize((800, 250), Image.ANTIALIAS)
+        # self.scout_cam_image.paste(self.scout_cam_image, (0, 0), self.scout_cam_image)
         self.scout_cam_canvas = Canvas(self.presentation_frame)
-        self.scout_cam_canvas.config(width = 680, height = 480)
+        self.scout_cam_canvas.config(width = 640, height = 360, highlightthickness = 0)
         print(self.scout_cam_canvas.config())
         self.scout_cam_canvas.image = PIL.ImageTk.PhotoImage(self.scout_cam_image)
         self.scout_cam_canvas.create_image(0, 0, image=self.scout_cam_canvas.image, anchor='nw', tags="IMG")
-        self.scout_cam_canvas.pack()
+        self.scout_cam_canvas.grid(row = 0, column = 0, rowspan = 20, columnspan = 20, stick = 'nsew')
         # img = Image.open("flower.png")
         self.scout_cam_canvas.bind("<Configure>", self.resize)
 
-        ttk.Label(self.presentation_frame, text = "Visitors: ").pack()
+        # def RBGAImage(path):
+        #     return Image.open(path).convert("RGBA")
+        #
+        # face = RBGAImage("faces/face.gif")
+        # eyes = RBGAImage("faces/eyes1.png")
+        #
+        # face.paste(eyes, (0, 0), eyes)
+        #
+        # facepic = ImageTk.PhotoImage(face)
+        #
+        # label1 = Label(image=facepic)
+        # label1.grid(row=0, column=0)
+
+        self.rect = self.scout_cam_canvas.create_rectangle(200, 250, 400, 400)
+        self.scout_cam_canvas.itemconfigure(self.rect, fill = 'yellow')
+
+        ttk.Label(self.presentation_frame, text = "Visitors: ").grid(row = 21, column = 2, columnspan = 2, stick = 'w')
+
+        # self.test_canvas = Canvas(self.presentation_frame, background = 'red', highlightthickness = 0)
+        # self.test_canvas.attributes('-alpha', 0.3)
+        # self.test_label.lift()
+        # self.test_canvas.grid(row = 2, column = 3, stick = 'nsew')
+        # self.scout_cam_canvas.create_rectangle()
+
+        # if table_association == "VisitTimeBuckets" and any(char.isdigit() for char in scout_summaries_component):
+        #     if visit_time_buckets_index_2 < 20:
+        #         visit_time_buckets_index_1.append(scout_summaries_component)
+        #         visit_time_buckets_index_2 += 1
+        #     else:
+        #         scout_summaries_instance.visit_time_buckets.append(visit_time_buckets_index_1)
+        #         visit_time_buckets_index_1 = []
+        #         visit_time_buckets_index_1.append(scout_summaries_component)
+        #         visit_time_buckets_index_2 = 1
+        # elif len(scout_summaries_instance.visit_time_buckets) == 19:
+        #     scout_summaries_instance.visit_time_buckets.append(visit_time_buckets_index_1)
+
+        self.presentation_frame.rowconfigure('all', weight = 1)
+        self.presentation_frame.columnconfigure('all', weight = 1)
 
         year = StringVar()
         self.year_combobox = ttk.Combobox(self.selection_frame, textvariable = year)
@@ -94,7 +157,7 @@ class MeasureTheFutureApp:
 
 
     def get_scout_cam_image(self):
-        os.chdir('11_29_0830')
+        os.chdir('download (3)')
         # print(os.getcwd())
         print(os.listdir('.'))
         return PhotoImage(file = "{}/{}".format(os.getcwd(), os.listdir('.')[0]))
