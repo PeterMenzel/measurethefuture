@@ -18,6 +18,7 @@ YEARS = ["2017", "2018", "2019", "2020"]
 MONTHS = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 DAYS = ["1", "2", "3", "4", "5"]
 HOURS = ["9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM"]
+DATA_FILES = []
 
 
 
@@ -38,100 +39,149 @@ class MeasureTheFutureApp(wx.Frame):
         self.Centre()
         self.Show()
         self.present_image()
-        print(self.presentation_panel_size)
 
     def InitUI(self):
 
+        for file in os.listdir("."):
+            if file.endswith(".zip"):
+                DATA_FILES.append(file)
 
-        # os.chdir('..')
-        self.datalist = DataList("download (3)")
-        print(os.getcwd())
-        self.datalist.extract_files("download (3)")
-        self.datalist.get_fixed_filename()
-        self.datalist.load_scout_healths()
-        self.datalist.load_scout_interactions()
-        self.datalist.load_scout_summaries()
-
-
-        main_panel = wx.Panel(self)
-        main_panel_grid = wx.BoxSizer(wx.HORIZONTAL)
+        self.SetSize(860, 450)
+        self.SetMinSize((860, 450))
+        self.main_panel = wx.Panel(self)
+        self.main_panel_grid = wx.BoxSizer(wx.HORIZONTAL)
 
         # selection_panel = wx.Panel(frame)
-        selection_panel = wx.Panel(main_panel)
-        selection_box = wx.BoxSizer(wx.HORIZONTAL)
-        self.presentation_panel = wx.Panel(main_panel)
-        presentation_box = wx.BoxSizer(wx.VERTICAL)
+        self.selection_panel = wx.Panel(self.main_panel)
+        # selection_panel.SetMinSize(wx.Size(200, 400))
+        self.selection_box = wx.BoxSizer(wx.HORIZONTAL)
+        self.presentation_panel = wx.Panel(self.main_panel)
+        # self.presentation_panel.SetMinSize(wx.Size(640, 400))
+        self.presentation_box = wx.BoxSizer(wx.VERTICAL)
+        # heat_map_panel = wx.Panel(self.presentation_panel)
 
-        selection_grid = wx.FlexGridSizer(4, 2, 9, 25)
+        self.selection_grid = wx.FlexGridSizer(5, 2, 10, 20)
 
-        year = wx.StaticText(selection_panel, label="Year:")
-        month = wx.StaticText(selection_panel, label="Month:")
-        day = wx.StaticText(selection_panel, label="Day:")
-        hour = wx.StaticText(selection_panel, label="Hour:")
+        self.year = wx.StaticText(self.selection_panel, label="Year:")
+        self.month = wx.StaticText(self.selection_panel, label="Month:")
+        self.day = wx.StaticText(self.selection_panel, label="Day:")
+        self.hour = wx.StaticText(self.selection_panel, label="Hour:")
+        self.data_files = wx.StaticText(self.selection_panel, label="Data Files: ")
 
-        year_combo = wx.ComboBox(selection_panel, choices=YEARS, style=wx.CB_READONLY)
-        month_combo = wx.ComboBox(selection_panel, choices=MONTHS, style=wx.CB_READONLY)
-        day_combo = wx.ComboBox(selection_panel, choices=DAYS, style=wx.CB_READONLY)
-        hour_combo = wx.ComboBox(selection_panel, choices=HOURS, style=wx.CB_READONLY)
+        self.year_combo = wx.ComboBox(self.selection_panel, choices=YEARS, style=wx.CB_READONLY)
+        self.month_combo = wx.ComboBox(self.selection_panel, choices=MONTHS, style=wx.CB_READONLY)
+        self.day_combo = wx.ComboBox(self.selection_panel, choices=DAYS, style=wx.CB_READONLY)
+        self.hour_combo = wx.ComboBox(self.selection_panel, choices=HOURS, style=wx.CB_READONLY)
+        self.data_files_combo = wx.ComboBox(self.selection_panel, choices=DATA_FILES, style=wx.CB_READONLY)
 
-        selection_grid.AddMany([(year), (year_combo, 1, wx.EXPAND), (month),
-                     (month_combo, 1, wx.EXPAND), (day), (day_combo, 1, wx.EXPAND),
-                                (hour), (hour_combo, 1, wx.EXPAND)])
+        self.selection_grid.AddMany([(self.year), (self.year_combo, 1, wx.EXPAND), (self.month),
+                                (self.month_combo, 1, wx.EXPAND), (self.day), (self.day_combo, 1, wx.EXPAND),
+                                (self.hour), (self.hour_combo, 1, wx.EXPAND), (self.data_files), (self.data_files_combo, 1, wx.EXPAND)])
 
         # selection_grid.AddGrowableRow(2, 1)
         # selection_grid.AddGrowableCol(1, 1)
         # presentation_panel = wx.Panel(panel)
 
-        selection_box.Add(selection_grid, proportion=1, flag=wx.ALL | wx.EXPAND, border=15)
+        self.selection_box.Add(self.selection_grid, proportion=1, flag=wx.ALL | wx.EXPAND, border=15)
 
-        self.presentation_panel_size = self.presentation_panel.GetSize()
-        print(self.presentation_panel_size)
+        # self.file_selection =
+
+        self.datalist = DataList("download (3)")
+        # print(os.getcwd())
+        self.datalist.extract_files("download (3)")
+        self.datalist.get_fixed_filename()
+        self.datalist.load_scout_healths()
+        self.datalist.load_scout_interactions()
+        self.datalist.load_scout_summaries()
+        # print(os.listdir('.'))
+
+        self.scout_image_panel = wx.Panel(self.presentation_panel)
+        self.scout_image_panel.SetSize(640, 360)
         self.scout_image = wx.Image(os.listdir('.')[0], wx.BITMAP_TYPE_ANY)
         # print(scout_image.Size())
         self.scout_image.Rescale(640, 360)
         # scout_image.Size(width=640, height=360)
-        scout_image_control = wx.StaticBitmap(self.presentation_panel, wx.ID_ANY, wx.BitmapFromImage(self.scout_image))
-        print(scout_image_control.Size)
-        scout_image_control.SetBitmap(wx.BitmapFromImage(self.scout_image))
+        self.scout_image_control = wx.StaticBitmap(self.scout_image_panel, wx.ID_ANY, wx.Bitmap(self.scout_image))
+        self.scout_image_control.SetBitmap(wx.Bitmap(self.scout_image))
+        self.scout_image_control_box = wx.BoxSizer(wx.VERTICAL)
+        self.scout_image_dimensions = self.scout_image_control.GetSize()
 
-        myGrid = gridlib.Grid(self.presentation_panel)
-        myGrid.CreateGrid(20, 20)
-        myGrid.EnableGridLines(False)
-        # myGrid.HideRowLabels()
-        # myGrid.HideColLabels()
-        # myGrid.GridWindow()
-        myGrid.AutoSize()
-        presentation_box.Add(myGrid, 1, wx.EXPAND | wx.ALL)
+        self.heat_map = gridlib.Grid(self.scout_image_control)
+        # heat_map = gridlib.Grid(self.presentation_panel)
+        self.heat_map.CreateGrid(20, 20)
+        self.heat_map.EnableGridLines(False)
+        self.heat_map.EnableEditing(False)
+        self.heat_map.DisableDragRowSize()
+        self.heat_map.DisableDragColSize()
+        self.heat_map.HideRowLabels()
+        self.heat_map.HideColLabels()
+        self.heat_map.SetSize(self.scout_image_dimensions[0], self.scout_image_dimensions[1])
+        self.heat_map.SetDefaultRowSize(self.scout_image_dimensions[1] / 20, True)
+        self.heat_map.SetDefaultColSize(self.scout_image_dimensions[0] / 20, True)
+        self.scout_image_control_box.Add(self.heat_map, 1, flag=wx.ALL | wx.EXPAND)
 
-        presentation_box = wx.BoxSizer(wx.VERTICAL)
-        presentation_box.Add(myGrid, 1, wx.EXPAND)
+        # presentation_box = wx.BoxSizer(wx.VERTICAL)
+        # presentation_box.Add(heat_map, 1, wx.EXPAND)
 
+
+        # print(self.datalist.scout_summaries.visit_time_buckets)
+        # print(max(self.datalist.scout_summaries.visit_time_buckets[0]))
+        # print(max(self.datalist.scout_summaries.visit_time_buckets))
+        # max_visit_time_bucket = max(max(self.datalist.scout_summaries.visit_time_buckets))
+        max_i = []
+        for i in list(range(20)):
+            max_i.append(max(self.datalist.scout_summaries.visit_time_buckets[i]))
+        self.max_visit_time_bucket = max(max_i)
+        # print(self.max_visit_time_bucket)
+
+        self.max_visit_time_bucket /= 2
         for i in list(range(20)):
             for j in list(range(20)):
-                myGrid.SetCellBackgroundColour(i, j, (255, 0, 0, 50))
-                attr = gridlib.GridCellAttr()
-                attr.SetReadOnly(True)
-                myGrid.SetReadOnly(i, j, True)
+                time_bucket = self.datalist.scout_summaries.visit_time_buckets[i][j]
+                if time_bucket > self.max_visit_time_bucket:
+                    value = time_bucket - self.max_visit_time_bucket
+                    colour = (int(255 * (value / self.max_visit_time_bucket)), 0, 0, int(255 * 0.5))
+                else:
+                    value = self.max_visit_time_bucket - time_bucket
+                    colour= (0, 0, int(255 * (value / self.max_visit_time_bucket)), int(255 * 0.5))
+                self.heat_map.SetCellBackgroundColour(i, j, (colour))
+        # test_data = [[1, 2, 3, 4, 5], [3, 4, 5, 6, 7], [10, 15, 20, 25, 30], [1, 1, 1, 1, 1], [10, 10, 10, 10, 10]]
+        # max_test = max(max(test_data))
+        # for i in list(range(5)):
+        #     for j in list(range(5)):
+        #         time_bucket = test_data[i][j]
+        #         if time_bucket > max_test / 2:
+        #             colour = (int(255 * (time_bucket / max_test)), 0, 0, int(255 * 0.5))
+        #         else:
+        #             colour= (0, 0, int(255 * (time_bucket / max_test)), int(255 * 0.5))
+        #         heat_map.SetCellBackgroundColour(i, j, (colour))
+
+
+        # heat_map.SetCellBackgroundColour(i, j, (255, 0, 0, int(255 / 2)))
 
 
 
 
 
+        self.scout_image_control.SetSizer(self.scout_image_control_box)
 
-        wx.StaticText(self.presentation_panel, label="Visitors: ")
+        self.visitor_count_marker = wx.StaticText(self.presentation_panel, label="Visitors: {}".format(
+            self.datalist.scout_summaries.visitor_count))
+        self.visitor_count_font = wx.Font(18, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
+        self.visitor_count_marker.SetFont(self.visitor_count_font)
+        self.presentation_box.Add(self.scout_image_panel, 0)
+        self.presentation_box.Add(self.visitor_count_marker, 1, flag=wx.BOTTOM | wx.EXPAND)
+        # self.presentation_panel.SetSize(640, 360)
 
-        selection_panel.SetSizer(selection_box)
-        self.presentation_panel.SetSizer(presentation_box)
+        self.selection_panel.SetSizer(self.selection_box)
+        self.presentation_panel.SetSizer(self.presentation_box)
+        # presentation_box.Fit(self.presentation_panel)
         # panel_grid.Add(selection_panel, proportion=1, flag=wx.ALL | wx.EXPAND, border=15)
         # panel_grid.Add(presentation_panel, proportion=1, flag=wx.ALL | wx.EXPAND, border=15)
-        main_panel_grid.Add(selection_panel, 0, wx.EXPAND | wx.RIGHT, 5)
-        main_panel_grid.Add(self.presentation_panel, 1, wx.EXPAND)
+        self.main_panel_grid.Add(self.selection_panel, 0)
+        self.main_panel_grid.Add(self.presentation_panel, 1, flag=wx.ALL | wx.EXPAND)
         # panel_grid.Add((3, -1))
-        main_panel.SetSizer(main_panel_grid)
-
-    def OnSize(self, event):
-        self.presentation_panel_size = self.presentation_panel.GetSize()
-        event.Skip()
+        self.main_panel.SetSizer(self.main_panel_grid)
 
     def present_image(self):
         pass
