@@ -1,5 +1,4 @@
 from scout_healths import ScoutHealths
-
 from scout_summaries import ScoutSummaries
 import zipfile
 import json
@@ -26,27 +25,22 @@ class DataList:
         with zipfile.ZipFile(self.zip_filename, 'r') as data_folder:
             files = data_folder.namelist()
             data_folder.extractall()
-        # print(files)
-        # print("Current directory is", os.getcwd())
+            data_folder.close()
         os.chdir(filename)
-        # print("Current directory is", os.getcwd())
-        # print a list of all files (test)
-        # print(os.listdir('.'))
         return files
 
-    def get_fixed_filename(self):
-        """Return a 'fixed' version of filename."""
-        # im = Image.open(os.listdir('.')[0])
-        # im.save('scout_image.gif')
-        for file in os.listdir('.'):
-            new_name = file.replace(".json", ".csv") #.replace(".jpg", ".gif")
-            os.rename(file, new_name)
-        #     print(new_name)
-        # print(os.listdir('.'))
+    def get_image_name(self):
+        self.image_name = os.listdir('.')[0][:os.listdir('.')[0].find('.')]
+        print(self.image_name)
+
+    # def get_fixed_filename(self):
+    #     for file in os.listdir('.'):
+    #         new_name = file.replace(".json", ".csv")
+    #         os.rename(file, new_name)
 
     def load_scout_healths(self):
         self.scout_healths = ScoutHealths()
-        in_scout_healths_file = open("scout_healths.csv")
+        in_scout_healths_file = open("scout_healths.json")
         in_scout_healths = in_scout_healths_file.readlines()
         for i in range(len(in_scout_healths)):
             scout_healths_component = in_scout_healths[i].split(",")[0][2:]
@@ -81,7 +75,7 @@ class DataList:
         in_scout_healths_file.close()
 
     def load_scout_interactions(self):
-        in_scout_interactions_file = open("scout_interactions.csv")
+        in_scout_interactions_file = open("scout_interactions.json")
         in_scout_interactions = in_scout_interactions_file.readlines()
         for i in range(len(in_scout_interactions)):
             scout_interactions_component = in_scout_interactions[i].split(",")
@@ -91,7 +85,7 @@ class DataList:
 
     def load_scout_summaries(self):
         self.scout_summaries = ScoutSummaries()
-        in_scout_summaries_file = open("scout_summaries.csv")
+        in_scout_summaries_file = open("scout_summaries.json")
         in_scout_summaries = in_scout_summaries_file.readlines()
         table_association = None
         visit_time_buckets_index_1 = []
@@ -142,40 +136,5 @@ class DataList:
                     visitor_buckets_index_2 = 1
             elif len(self.scout_summaries.visitor_buckets) == 19:
                 self.scout_summaries.visitor_buckets.append(visitor_buckets_index_1)
-                # scout_summaries_instance.visit_time_buckets.append(scout_summaries_component[scout_summaries_component.find(':') + 3:-2])
-                # if scout_summaries_component.isdigit():
-                #     pass
-                # print(scout_summaries_instance.visit_time_buckets)
-            # if scout_summaries_component.startswith("ScoutUUID", 1):
-            #     scout_summaries_instance.scout_id = scout_summaries_component[scout_summaries_component.find(':') + 3:-1]
-            #     # scout_healths_instance.scout_id = "test"
-            #     print(scout_summaries_instance.scout_id)
-            # elif "VisitorCount" in scout_summaries_component:
-            #     scout_summaries_instance.visitor_count = scout_summaries_component[scout_summaries_component.find(':') + 2:]
-            #     # scout_healths_instance.scout_id = "test"
-            #     print(scout_summaries_instance.visitor_count)
-            # elif "VisitTimeBuckets" in scout_summaries_component:
-            #     # scout_summaries_instance.visit_time_buckets.append(scout_summaries_component[scout_summaries_component.find(':') + 3:-2])
-            #     if scout_summaries_component.isdigit():
-            #         pass
-            #     print(scout_summaries_instance.visit_time_buckets)
-        #     elif "TotalMemory" in scout_summaries_component:
-        #         scout_summaries_instance.total_memory.append(scout_summaries_component[scout_summaries_component.find(':') + 2:])
-        #         # scout_healths_instance.scout_id = "test"
-        #         print(scout_summaries_instance.total_memory)
-        #     elif "Storage" in scout_summaries_component:
-        #         scout_summaries_instance.storage.append(scout_summaries_component[scout_summaries_component.find(':') + 2:])
-        #         # scout_healths_instance.scout_id = "test"
-        #         print(scout_summaries_instance.storage)
-        #     elif "Memory" in scout_summaries_component:
-        #         scout_summaries_instance.memory.append(scout_summaries_component[scout_summaries_component.find(':') + 2:])
-        #         # scout_healths_instance.scout_id = "test"
-        #         print(scout_summaries_instance.memory)
 
-        # print(scout_summaries_instance.visit_time_buckets)
-        # print(len(scout_summaries_instance.visit_time_buckets))
-        # print(len(scout_summaries_instance.visit_time_buckets[18]))
-        # print(scout_summaries_instance.visitor_buckets)
-        # print(in_scout_summaries)
-        # print(in_scout_summaries.split(",")[0][2:])
         in_scout_summaries_file.close()

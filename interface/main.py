@@ -12,6 +12,7 @@ import wx.grid as gridlib
 # from matplotlib.figure import Figure
 from PIL import ImageTk, Image
 import PIL
+from PIL import Image
 from datalist import DataList
 from scout_summaries import ScoutSummaries
 
@@ -22,15 +23,6 @@ DAYS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14
 HOURS = ["9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM"]
 DATA_FILES = []
 
-
-
-#!/usr/bin/python
-
-# simple.py
-
-
-
-
 class MeasureTheFutureApp(wx.Frame):
 
     def __init__(self, parent, title):
@@ -39,12 +31,14 @@ class MeasureTheFutureApp(wx.Frame):
         self.init_ui()
         self.Bind(wx.EVT_COMBOBOX, self.on_data_file_selection, self.data_files_combo)
         self.Bind(wx.EVT_BUTTON, self.on_directory_button, self.directory_button)
-        self.Bind(wx.EVT_SIZE, self.on_size_change)
+        # self.Bind(wx.EVT_SIZE, self.on_size_change)
         self.Centre()
         self.Show()
+        self.Maximize(True)
 
     def init_ui(self):
 
+        wx.InitAllImageHandlers()
         self.directory_path = os.getcwd()
 
         self.get_data_files()
@@ -78,7 +72,6 @@ class MeasureTheFutureApp(wx.Frame):
                                      (self.day), (self.day_combo, 1, wx.EXPAND), (self.hour),
                                      (self.hour_combo, 1, wx.EXPAND)])
 
-        print(self.data_files_combo.GetId())
         self.selection_box.Add(self.selection_grid, proportion=1, flag=wx.ALL | wx.EXPAND, border=10)
         self.directory_box = wx.BoxSizer(wx.HORIZONTAL)
         self.directory_box.Add(self.directory_prompt, flag=wx.ALIGN_LEFT)
@@ -87,22 +80,21 @@ class MeasureTheFutureApp(wx.Frame):
 
         # self.on_data_file_selection()
 
-        self.get_data_file_selection()
+        # self.get_data_file_selection()
+        #
+        # self.load_datalist()
+        #
+        # self.load_scout_image()
+        #
+        # self.get_heat_map()
 
-        self.load_datalist()
+        # self.set_visitor_label()
 
-        self.load_scout_image()
+        # self.get_visitor_count()
 
-        self.get_heat_map()
 
-        self.set_visitor_label()
 
-        self.get_visitor_count()
 
-        self.scout_image_control.SetSizer(self.scout_image_control_box)
-
-        self.presentation_box.Add(self.scout_image_panel, 0)
-        self.presentation_box.Add(self.visitor_count_marker, 1, flag=wx.BOTTOM | wx.EXPAND | wx.ALIGN_BOTTOM)
 
         self.selection_panel.SetSizer(self.selection_box)
         self.presentation_panel.SetSizer(self.presentation_box)
@@ -112,12 +104,16 @@ class MeasureTheFutureApp(wx.Frame):
         self.main_panel.SetSizer(self.main_panel_grid)
 
         self.set_main_size()
-        print(self.scout_image_panel)
+
+    def set_presentation_box_sizer(self):
+        self.presentation_box.Add(self.scout_image_panel, 0)
+        self.presentation_box.Add(self.visitor_count_marker, 1, flag=wx.BOTTOM | wx.EXPAND | wx.ALIGN_BOTTOM)
+        self.Layout()
 
     def set_main_size(self):
-        self.best_size_x = self.selection_panel.BestSize[0] + self.presentation_panel.BestSize[0]
-        self.best_size_y = self.presentation_panel.BestSize[1] + self.visitor_count_marker.BestSize[1]
-        self.SetSize(self.best_size_x, self.best_size_y)
+        # self.best_size_x = self.selection_panel.BestSize[0] + self.presentation_panel.BestSize[0]
+        # self.best_size_y = self.presentation_panel.BestSize[1] + self.visitor_count_marker.BestSize[1]
+        # self.SetSize(self.best_size_x, self.best_size_y)
         self.SetMinSize((self.Size))
 
     def get_heat_map(self):
@@ -129,6 +125,12 @@ class MeasureTheFutureApp(wx.Frame):
         self.heat_map.DisableDragColSize()
         self.heat_map.HideRowLabels()
         self.heat_map.HideColLabels()
+        print(self.heat_map.GetDefaultCellBackgroundColour())
+        # print(self.heat_map.Alpha())
+        # self.heat_map.SetDefaultCellBackgroundColour(0, 0, 0, 0)
+        # self.heat_map.DC
+        # self.heat_map.SetForegroundColour(0, 0, 0, 0)
+        self.test = wx.GCDC()
         self.heat_map.SetSize(self.scout_image_dimensions[0], self.scout_image_dimensions[1])
         self.heat_map.SetDefaultRowSize(self.scout_image_dimensions[1] / 20, True)
         self.heat_map.SetDefaultColSize(self.scout_image_dimensions[0] / 20, True)
@@ -152,30 +154,47 @@ class MeasureTheFutureApp(wx.Frame):
     def load_scout_image(self):
         os.chdir(self.file_selection)
         self.scout_image_panel = wx.Panel(self.presentation_panel)
-        self.scout_image_panel.SetSize(640, 360)
-        self.scout_image_dimensions = self.scout_image_panel.GetSize()
-        self.scout_image = wx.Image(os.listdir('.')[0], wx.BITMAP_TYPE_ANY)
+        image_dimension_x = self.GetSize()[0] - self.selection_panel.GetSize()[0]
+        image_dimension_y = self.GetSize()[1] - 20
+        if image_dimension_x / image_dimension_y >= 16 / 9:
+            self.scout_image_dimensions = ((image_dimension_y / 9) * 16) - 10, image_dimension_y - 10
+        else:
+            self.scout_image_dimensions = image_dimension_x - 10, ((image_dimension_x / 16) * 9) - 10
+        self.scout_image_panel.SetSize(self.scout_image_dimensions[0], self.scout_image_dimensions[1])
+        # self.scout_image_dimensions = self.scout_image_panel.GetSize()
+        # os.system("magick convert {0}.jpg {0}.png".format(self.datalist.image_name))
+        # im = Image.open("Ba_b_do8mag_c6_big.png")
+        self.scout_image = Image.open("{}.jpg".format(self.datalist.image_name))
+        self.scout_image = self.scout_image.convert('RGBA')
+        self.scout_image.save("{}.png".format(self.datalist.image_name))
+        self.scout_image = wx.Image("{}.png".format(self.datalist.image_name), wx.BITMAP_TYPE_ANY)
         self.scout_image.Rescale(self.scout_image_dimensions[0], self.scout_image_dimensions[1])
+        print(self.scout_image.HasAlpha())
+        self.scout_image.InitAlpha()
+        print(self.scout_image.GetAlpha())
         self.scout_image_control = wx.StaticBitmap(self.scout_image_panel, wx.ID_ANY, wx.Bitmap(self.scout_image))
         self.scout_image_control.SetBitmap(wx.Bitmap(self.scout_image))
         self.scout_image_control_box = wx.BoxSizer(wx.VERTICAL)
         os.chdir('..')
+        self.scout_image_control.SetSizer(self.scout_image_control_box)
+        # print(self.scout_image.InitAlpha())
+        print(self.scout_image.HasAlpha())
+        # self.scout_image_control.
+        # print(self.scout_image.GetAlpha())
+        # self.scout_image.SetAlpha(127)
 
     def load_datalist(self):
         self.datalist = DataList(self.file_selection)
-        print(os.getcwd())
-        print(os.listdir('.'))
         self.datalist.extract_files(self.file_selection)
-        self.datalist.get_fixed_filename()
+        # self.datalist.get_fixed_filename()
+        self.datalist.get_image_name()
         self.datalist.load_scout_healths()
         self.datalist.load_scout_interactions()
         self.datalist.load_scout_summaries()
         os.chdir('..')
-        print(os.getcwd())
 
     def get_data_file_selection(self):
         self.file_selection = self.data_files_combo.GetValue()
-        print(self.file_selection)
 
     def get_data_files(self):
         for file in os.listdir("."):
@@ -193,14 +212,16 @@ class MeasureTheFutureApp(wx.Frame):
         self.visitor_count_marker.SetFont(self.visitor_count_font)
 
     def on_data_file_selection(self, event):
-        self.heat_map.Destroy()
-        self.scout_image.Destroy()
-        self.scout_image_control.Destroy()
+        # self.heat_map.Destroy()
+        # self.scout_image.Destroy()
+        # self.scout_image_control.Destroy()
         os.chdir(self.directory_path)
         self.get_data_file_selection()
         self.load_datalist()
         self.load_scout_image()
         self.get_heat_map()
+        self.set_visitor_label()
+        self.set_presentation_box_sizer()
         self.get_visitor_count()
         self.Layout()
 
