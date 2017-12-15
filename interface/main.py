@@ -6,15 +6,36 @@ import wx
 import wx.grid as gridlib
 # import Image, ImageTk
 # from Pillow import ImageTk, Image
-# import matplotlib
-# matplotlib.use("TkAgg")
-# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
-# from matplotlib.figure import Figure
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.figure import Figure
 from PIL import ImageTk, Image
 import PIL
 from PIL import Image
 from datalist import DataList
 from scout_summaries import ScoutSummaries
+
+
+from numpy import arange, sin, pi
+import matplotlib
+matplotlib.use('WXAgg')
+
+from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
+from matplotlib.backends.backend_wx import NavigationToolbar2Wx
+from matplotlib.figure import Figure
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.collections import PatchCollection
+from matplotlib.patches import Rectangle
+
+from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg
 
 
 YEARS = ["2017", "2018", "2019", "2020"]
@@ -39,6 +60,9 @@ class MeasureTheFutureApp(wx.Frame):
     def init_ui(self):
 
         wx.InitAllImageHandlers()
+        #
+
+        #
         self.directory_path = os.getcwd()
 
         self.get_data_files()
@@ -91,10 +115,73 @@ class MeasureTheFutureApp(wx.Frame):
         # self.set_visitor_label()
 
         # self.get_visitor_count()
-
-
-
-
+###
+        # self.panel =
+        # X = 10 * np.random.rand(5, 3)
+        #
+        # fig, ax = plt.subplots()
+        # print(ax)
+        # ax.imshow(X, interpolation='nearest')
+        #
+        # numrows, numcols = X.shape
+        #
+        # def format_coord(x, y):
+        #     col = int(x + 0.5)
+        #     row = int(y + 0.5)
+        #     if col >= 0 and col < numcols and row >= 0 and row < numrows:
+        #         z = X[row, col]
+        #         return 'x=%1.4f, y=%1.4f, z=%1.4f' % (x, y, z)
+        #     else:
+        #         return 'x=%1.4f, y=%1.4f' % (x, y)
+        #
+        # ax.format_coord = format_coord
+        # plt.show()
+###
+        # # Number of data points
+        # n = 5
+        #
+        # # Dummy data
+        # np.random.seed(19680801)
+        # x = np.arange(0, n, 1)
+        # y = np.random.rand(n) * 5.
+        #
+        # # Dummy errors (above and below)
+        # xerr = np.random.rand(2, n) + 0.1
+        # yerr = np.random.rand(2, n) + 0.2
+        #
+        # def make_error_boxes(ax, xdata, ydata, xerror, yerror, facecolor='r',
+        #                      edgecolor='None', alpha=0.5):
+        #
+        #     # Create list for all the error patches
+        #     errorboxes = []
+        #
+        #     # Loop over data points; create box from errors at each point
+        #     for x, y, xe, ye in zip(xdata, ydata, xerror.T, yerror.T):
+        #         rect = Rectangle((x - xe[0], y - ye[0]), xe.sum(), ye.sum())
+        #         errorboxes.append(rect)
+        #
+        #     # Create patch collection with specified colour/alpha
+        #     pc = PatchCollection(errorboxes, facecolor=facecolor, alpha=alpha,
+        #                          edgecolor=edgecolor)
+        #
+        #     # Add collection to axes
+        #     ax.add_collection(pc)
+        #
+        #     # Plot errorbars
+        #     artists = ax.errorbar(xdata, ydata, xerr=xerror, yerr=yerror,
+        #                           fmt='None', ecolor='k')
+        #
+        #     return artists
+        #
+        # # Create figure and axes
+        # fig, ax = plt.subplots(1)
+        #
+        # # Call function to create error boxes
+        # _ = make_error_boxes(ax, x, y, xerr, yerr)
+        #
+        # plt.show()
+###
+        # self.test =
 
         self.selection_panel.SetSizer(self.selection_box)
         self.presentation_panel.SetSizer(self.presentation_box)
@@ -104,6 +191,69 @@ class MeasureTheFutureApp(wx.Frame):
         self.main_panel.SetSizer(self.main_panel_grid)
 
         self.set_main_size()
+
+    def plot3(self):
+
+        self.fig = Figure(figsize=(1, 1), edgecolor='none', facecolor='none')
+        self.ax = self.fig.add_subplot(1, 1, 1)
+        self.fig.subplots_adjust(left=0.5)
+        self.canvas = FigureCanvasWxAgg(self, -1, self.fig)
+
+        self.scout_image_control_box.Add(self.canvas, 1, wx.ALL | wx.GROW)
+        self.SetSizerAndFit(self.scout_image_control_box)
+
+        wx.CallAfter(self.canvas.draw)
+
+        self.scout_image_control_box.Add(self.canvas, 1, wx.GROW | wx.ALL)
+
+        wx.CallAfter(self.canvas.canvas.draw)
+
+        # Pcolormesh for a 10x10 matrix/array
+        # self.make_error_boxes()
+        # matrix = np.random.rand(20, 20)
+        #
+        # self.fig3 = Figure()
+        # self.ax1f3 = self.fig3.add_subplot(111)
+        # self.ax1f3.pcolormesh(matrix)
+        # self.ax1f3.set_alpha(0.5)
+        # # set(self.ax1f3, 'Color', 'None')
+        # print(self.ax1f3.get_facecolor())
+        # self.ax1f3.set_facecolor('None')
+        # print(self.ax1f3.get_facecolor())
+        # self.ax1f3.set_axis_bgcolor('None')
+        #
+        # # self.scout_image_control_box.Add(self.fig3, 0)
+        # self.fig3.set_alpha(0.5)
+        # rect = Rectangle((100, 100), 200, 200)
+        # self.canvas = FigureCanvas(self.scout_image_control, -1, self.fig3)
+        # print(self.canvas.BackgroundColour)
+        # self.canvas.SetBackgroundColour((0, 0, 0, 0))
+        # self.SetForegroundColour((0, 0, 0, 0))
+        # print(self.canvas.GetBackgroundColour())
+        # # self.canvas
+        # self.scout_image_control_box.Add(rect, 0)
+
+    def make_error_boxes(ax, xdata, ydata, xerror, yerror, facecolor='r',
+                         edgecolor='None', alpha=0.5):
+
+        # Create list for all the error patches
+        errorboxes = []
+
+        # Loop over data points; create box from errors at each point
+        for x, y, xe, ye in zip(xdata, ydata, xerror.T, yerror.T):
+            rect = Rectangle((x - xe[0], y - ye[0]), xe.sum(), ye.sum())
+            errorboxes.append(rect)
+
+        # Create patch collection with specified colour/alpha
+        pc = PatchCollection(errorboxes, facecolor=facecolor, alpha=alpha,
+                             edgecolor=edgecolor)
+
+        # Add collection to axes
+        ax.add_collection(pc)
+
+        # Plot errorbars
+        artists = ax.errorbar(xdata, ydata, xerr=xerror, yerr=yerror,
+                              fmt='None', ecolor='k')
 
     def set_presentation_box_sizer(self):
         self.presentation_box.Add(self.scout_image_panel, 0)
@@ -116,6 +266,36 @@ class MeasureTheFutureApp(wx.Frame):
         # self.SetSize(self.best_size_x, self.best_size_y)
         self.SetMinSize((self.Size))
 
+    def test_heat(self):
+        # self.split_win = wx.SplitterWindow(self)
+        # self.top_split = wx.Panel(self.split_win, style=wx.SUNKEN_BORDER)
+        self.test = MatplotPanel(
+            self.scout_image_control)  # This call/link the MatplotPanel and MainFrame classes which replaces the above line
+        # self.bottom_split = wx.Panel(self.split_win, style=wx.SUNKEN_BORDER)
+        # self.split_win.SplitHorizontally(self.test, self.bottom_split, 480)
+
+        # plotting variables declared within MainFrame class
+        self.a = [0.25, 0.97, 0.59, 0.84, 0.93, 0.83, 0.98, 0.28, 0.31, 0.67]
+        self.b = [0.52, 0.83, 0.98, 0.28, 0.31, 0.03, 0.29, 0.49, 0.85, 0.80]
+        self.plot3()
+        # Add some contrls/widgets (StaticText and Buttons)
+        # Add Text control to the bottom_split window
+        # self.text1 = wx.StaticText(self.bottom_split, -1, u"You can also plot from file", size=(250, 30), pos=(510, 10),
+        #                            style=wx.ALIGN_CENTER)
+        # self.text1.SetBackgroundColour('Gray')
+        # font = wx.Font(15, wx.SWISS, wx.NORMAL, wx.NORMAL)
+        # self.text1.SetFont(font)
+        # self.heat_map = matplotlib.patches.Rectangle((50, 50), 200, 150)
+        # self.heat_map.BeginDrawing()
+        # self.heat_map.Dra
+        # self.heat_map.SetPen(wx.Pen("grey", style=wx.TRANSPARENT))
+        # self.heat_map.SetBrush(wx.Brush("grey", wx.SOLID))
+        # set x, y, w, h for rectangle
+        # self.heat_map.DrawRectangle(250, 250, 50, 50)
+
+        # self.heat_map.EndDrawing()
+        # del self.heat_map
+
     def get_heat_map(self):
         self.heat_map = gridlib.Grid(self.scout_image_control)
         self.heat_map.CreateGrid(20, 20)
@@ -127,9 +307,18 @@ class MeasureTheFutureApp(wx.Frame):
         self.heat_map.HideColLabels()
         print(self.heat_map.GetDefaultCellBackgroundColour())
         # print(self.heat_map.Alpha())
-        # self.heat_map.SetDefaultCellBackgroundColour(0, 0, 0, 0)
+        self.heat_map.SetDefaultCellBackgroundColour((0, 0, 0, 0))
+        # self.heat_map.SetDefaultCellBackgroundColour('None')
+        self.heat_map.SetBackgroundColour((0, 0, 0, 0))
         # self.heat_map.DC
-        # self.heat_map.SetForegroundColour(0, 0, 0, 0)
+        self.heat_map.SetForegroundColour((0, 0, 0, 0))
+        self.heat_map.SetLabelBackgroundColour((0, 0, 0, 0))
+        self.heat_map.SetOwnBackgroundColour((0, 0, 0, 0))
+        self.heat_map.SetOwnForegroundColour((0, 0, 0, 0))
+        print(self.heat_map.GetBackgroundColour())
+        # print(self.heat_map.GetDefaultCellBackgroundColour())
+        print(self.heat_map.GetForegroundColour())
+        print(self.heat_map.GetDefaultCellBackgroundColour())
         self.test = wx.GCDC()
         self.heat_map.SetSize(self.scout_image_dimensions[0], self.scout_image_dimensions[1])
         self.heat_map.SetDefaultRowSize(self.scout_image_dimensions[1] / 20, True)
@@ -219,6 +408,7 @@ class MeasureTheFutureApp(wx.Frame):
         self.get_data_file_selection()
         self.load_datalist()
         self.load_scout_image()
+        # self.test_heat()
         self.get_heat_map()
         self.set_visitor_label()
         self.set_presentation_box_sizer()
@@ -259,6 +449,18 @@ class MeasureTheFutureApp(wx.Frame):
         self.Layout()
 
 
+class MatplotPanel(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent, -1, size=(50, 50))
+
+        self.figure = Figure()
+        self.axes = self.figure.add_subplot(111)
+
+        t = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0]
+        s = [0.0, 1.0, 0.0, 1.0, 0.0, 2.0, 1.0, 2.0, 1.0, 0.0]
+
+        self.axes.plot(t, s)
+        self.canvas = FigureCanvas(self, -1, self.figure)
 
 if __name__ == '__main__':
     app = wx.App()
